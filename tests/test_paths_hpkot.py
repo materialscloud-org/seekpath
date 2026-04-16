@@ -1148,3 +1148,7 @@ class TestExplicitPaths_Orig_Cell(unittest.TestCase):
             np.testing.assert_array_almost_equal(
                 k_abs, k_abs_standard @ res_standard['rotation_matrix']
             )
+
+
+if __name__ == '__main__':
+    unittest.main()
