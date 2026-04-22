@@ -96,7 +96,7 @@ def get_path(
         - ``bravais_lattice``: the Bravais lattice string (like ``cP``, ``tI``, ...)
         - ``bravais_lattice_extended``: the specific case used to define labels and
           coordinates (like ``cP1``, ``tI2``, ...)
-        - ``cont_lattice``: three real-space vectors for the crystallographic
+        - ``conv_lattice``: three real-space vectors for the crystallographic
           conventional cell (``conv_lattice[0,:]`` is the first vector)
         - ``conv_positions``: fractional coordinates of atoms in the
           crystallographic conventional cell
