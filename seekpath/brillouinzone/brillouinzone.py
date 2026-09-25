@@ -1,11 +1,15 @@
 """Module to compute the Brillouin zone of a crystal."""
 
+from __future__ import annotations
+
 from collections import defaultdict
 import warnings
-from typing import Union
+from typing import TYPE_CHECKING, Union
 
 import numpy as np
-from scipy.spatial import Voronoi, ConvexHull, Delaunay
+
+if TYPE_CHECKING:
+    from scipy.spatial import ConvexHull, Delaunay
 
 
 def get_BZ(
@@ -127,6 +131,9 @@ class BZ:
             plotting library prefers these - these are not oriented for the
             time being)
         """
+        # scipy is the optional `bz` extra, so import it only when a BZ is built.
+        from scipy.spatial import ConvexHull, Delaunay, Voronoi
+
         ret_data = {}
 
         supercell_size = 3  # Is this enough?
