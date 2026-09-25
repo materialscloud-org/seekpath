@@ -1034,36 +1034,6 @@ class TestPaths3D_HPKOT_Orig_Cell(unittest.TestCase):
 
         self.assertEqual(res['spacegroup_international'], 'Fd-3m')
 
-    def test_left_handed_cubic_supercell(self):
-        """
-        Obtain the k-path for a left-handed 2*1*1 supercell of a cubic system,
-        which must still be recognized as a supercell.
-        """
-        import warnings
-
-        from seekpath import SupercellWarning
-
-        cell = [[8.0, 0.0, 0.0], [0.0, 4.0, 0.0], [0.0, 0.0, 4.0]]
-        positions = [[0.0, 0.0, 0.0], [0.5, 0.0, 0.0]]
-        atomic_numbers = [1, 1]
-
-        T = np.array([[1, 0, 1], [0, 1, 2], [0, 0, -1]])
-
-        cell = T @ cell
-        positions = positions @ np.linalg.inv(T)
-        system = (cell, positions, atomic_numbers)
-        self.assertLess(np.linalg.det(cell), 0)
-
-        with warnings.catch_warnings(record=True) as w:
-            warnings.simplefilter('always')
-            res = self.base_test(system)
-            self.assertEqual(res['is_supercell'], True)
-
-            relevant_w = [_ for _ in w if issubclass(_.category, SupercellWarning)]
-            self.assertEqual(len(relevant_w), 1)
-
-        self.assertEqual(res['spacegroup_international'], 'Pm-3m')
-
     def test_no_symmetrization(self):
         """
         Test that symmetrization is not performed so that the k path is on

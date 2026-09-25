@@ -24,7 +24,7 @@ def is_same_face(f1, f2):
 
     f1 and f2 should be a list of 3d points (i.e., a list of lists).
 
-    It also checks if the the coordinates are shifted (i.e. the first one is
+    It also checks if the coordinates are shifted (i.e. the first one is
         now the second, the second the third etc.). Tries also points in
         reversed order.
     """

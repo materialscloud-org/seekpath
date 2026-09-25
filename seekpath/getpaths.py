@@ -166,9 +166,9 @@ def get_path(
           (the determinant is integer and gives the ratio in volume between
           the conventional and primitive cells)
         - ``volume_original_wrt_conv``: volume ratio of the user-provided cell
-          with respect to the the crystallographic conventional cell
+          with respect to the crystallographic conventional cell
         - ``volume_original_wrt_prim``: volume ratio of the user-provided cell
-          with respect to the the crystalloraphic primitive cell (both volume
+          with respect to the crystallographic primitive cell (both volume
           ratios are negative if the user-provided cell is left-handed)
 
     :note: An :py:exc:`~seekpath.hpkot.EdgeCaseWarning` is issued for
