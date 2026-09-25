@@ -5,7 +5,14 @@ import warnings
 from typing import Union
 
 import numpy as np
-from scipy.spatial import Voronoi, ConvexHull, Delaunay
+
+try:
+    from scipy.spatial import ConvexHull, Delaunay, Voronoi
+except ImportError as exc:
+    raise ImportError(
+        'The Brillouin zone module requires scipy, install it with '
+        '`pip install seekpath[bz]`'
+    ) from exc
 
 
 def get_BZ(
