@@ -1,3 +1,11 @@
+# v2.2.2
+
+* Fix `import seekpath` without `scipy`: the `seekpath.brillouinzone` subpackage (which needs the `bz` extra) is now imported lazily on first access. This affected v2.2.0 and v2.2.1 [bf1a956](https://github.com/materialscloud-org/seekpath/commit/bf1a956be7e7dabcae904bfa6e35fae663e0fcc1)
+* Declare `packaging` as a dependency, fixing a `ModuleNotFoundError` in `get_path` in clean environments. This affected v2.2.0 and v2.2.1 [029b303](https://github.com/materialscloud-org/seekpath/commit/029b30360790175760a464191241110107902bc9)
+* Fix `is_supercell` wrongly flagging left-handed primitive cells as supercells (and emitting a spurious `SuperCellWarning`) [6fa1a3c](https://github.com/materialscloud-org/seekpath/commit/6fa1a3c3f8e3c1e18faec40358d4a6567b214596)
+* Tests: Add missing `__main__` entry points to test files [aa1d767](https://github.com/materialscloud-org/seekpath/commit/aa1d76703c6beba05290dd093a7cbb81fcb68b53)
+* Docs: Fix typo in docstring [a540600](https://github.com/materialscloud-org/seekpath/commit/a540600263d3d09494b184575a0929f2d29cf79c)
+
 # v2.2.1
 * DevOps: Fix readthedocs configuration, update pre-commit configuration and transfer repo to the materialscloud-org organization
 
