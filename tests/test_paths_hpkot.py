@@ -1002,6 +1002,68 @@ class TestPaths3D_HPKOT_Orig_Cell(unittest.TestCase):
 
         self.assertEqual(res['spacegroup_international'], 'Pm-3m')
 
+    def test_left_handed_fcc(self):
+        """
+        Obtain the k-path for a left-handed primitive fcc cell, which is not
+        a supercell even though its volume ratio to the primitive cell is -1.
+        """
+        import warnings
+
+        from seekpath import SupercellWarning
+
+        cell = [[-3.0, 0.0, 3.0], [0.0, 3.0, 3.0], [-3.0, 3.0, 0.0]]
+        positions = [[0.0, 0.0, 0.0], [0.25, 0.25, 0.25]]
+        atomic_numbers = [1, 1]
+
+        # An improper rotation makes the cell left-handed
+        s = np.sin(0.3)
+        c = np.cos(0.3)
+        R = np.array([[-1.0, 0.0, 0.0], [0.0, c, s], [0.0, -s, c]])
+
+        cell = cell @ R
+        system = (cell, positions, atomic_numbers)
+        self.assertLess(np.linalg.det(cell), 0)
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
+            res = self.base_test(system)
+            self.assertEqual(res['is_supercell'], False)
+
+            relevant_w = [_ for _ in w if issubclass(_.category, SupercellWarning)]
+            self.assertEqual(relevant_w, [])
+
+        self.assertEqual(res['spacegroup_international'], 'Fd-3m')
+
+    def test_left_handed_cubic_supercell(self):
+        """
+        Obtain the k-path for a left-handed 2*1*1 supercell of a cubic system,
+        which must still be recognized as a supercell.
+        """
+        import warnings
+
+        from seekpath import SupercellWarning
+
+        cell = [[8.0, 0.0, 0.0], [0.0, 4.0, 0.0], [0.0, 0.0, 4.0]]
+        positions = [[0.0, 0.0, 0.0], [0.5, 0.0, 0.0]]
+        atomic_numbers = [1, 1]
+
+        T = np.array([[1, 0, 1], [0, 1, 2], [0, 0, -1]])
+
+        cell = T @ cell
+        positions = positions @ np.linalg.inv(T)
+        system = (cell, positions, atomic_numbers)
+        self.assertLess(np.linalg.det(cell), 0)
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
+            res = self.base_test(system)
+            self.assertEqual(res['is_supercell'], True)
+
+            relevant_w = [_ for _ in w if issubclass(_.category, SupercellWarning)]
+            self.assertEqual(len(relevant_w), 1)
+
+        self.assertEqual(res['spacegroup_international'], 'Pm-3m')
+
     def test_no_symmetrization(self):
         """
         Test that symmetrization is not performed so that the k path is on
@@ -1089,22 +1151,16 @@ class TestExplicitPaths_Orig_Cell(unittest.TestCase):
         res_standard = seekpath.get_explicit_k_path(system, recipe='hpkot')
 
         with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
             res_original = seekpath.get_explicit_k_path_orig_cell(
                 system, recipe='hpkot'
             )
-            self.assertEqual(res_original['is_supercell'], True)
+            # The cell is left-handed (because of the improper rotation R), but
+            # it is a primitive cell, not a supercell
+            self.assertEqual(res_original['is_supercell'], False)
 
-            # Checks on issued warnings
             relevant_w = [_ for _ in w if issubclass(_.category, SupercellWarning)]
-            self.assertEqual(
-                len(relevant_w),
-                1,
-                f'Wrong number of warnings issued! ({len(relevant_w)} instead of 1)',
-            )
-
-            check_string = 'The provided cell is a supercell: the returned'
-            if check_string is not None:
-                self.assertIn(check_string, str(relevant_w[0].message))
+            self.assertEqual(relevant_w, [])
 
         self.assertEqual(res_original['path'], res_standard['path'])
         self.assertEqual(res_original['augmented_path'], res_standard['augmented_path'])

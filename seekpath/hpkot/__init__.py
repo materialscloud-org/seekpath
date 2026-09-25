@@ -121,7 +121,8 @@ def get_path(
         - ``volume_original_wrt_conv``: volume ratio of the user-provided cell
           with respect to the the crystallographic conventional cell
         - ``volume_original_wrt_prim``: volume ratio of the user-provided cell
-          with respect to the the crystallographic primitive cell
+          with respect to the the crystallographic primitive cell (both volume
+          ratios are negative if the user-provided cell is left-handed)
 
     :note: An :py:exc:`~seekpath.hpkot.EdgeCaseWarning` is issued for
         edge cases (e.g. if ``a==b==c`` for
