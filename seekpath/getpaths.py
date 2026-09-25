@@ -166,9 +166,10 @@ def get_path(
           (the determinant is integer and gives the ratio in volume between
           the conventional and primitive cells)
         - ``volume_original_wrt_conv``: volume ratio of the user-provided cell
-          with respect to the the crystallographic conventional cell
+          with respect to the crystallographic conventional cell
         - ``volume_original_wrt_prim``: volume ratio of the user-provided cell
-          with respect to the the crystalloraphic primitive cell
+          with respect to the crystallographic primitive cell (both volume
+          ratios are negative if the user-provided cell is left-handed)
 
     :note: An :py:exc:`~seekpath.hpkot.EdgeCaseWarning` is issued for
         edge cases (e.g. if ``a==b==c`` for
@@ -421,7 +422,9 @@ def get_path_orig_cell(
         recipe=recipe,
     )
 
-    is_supercell = abs(res['volume_original_wrt_prim'] - 1) > 0.1
+    # The volume ratio is negative for a left-handed input cell, so only its
+    # magnitude says whether the cell is a supercell
+    is_supercell = abs(abs(res['volume_original_wrt_prim']) - 1) > 0.1
 
     if is_supercell:
         warnings.warn(
